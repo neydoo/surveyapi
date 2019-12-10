@@ -9,7 +9,7 @@ const SurveySchema = new Schema(
     sex: { type: String },
     lat: { type: String },
     lng: { type: String },
-    sex: { type: String, enum: ["Male", "Female"] },
+    sex: { type: String },
     collectedBy: { type: Schema.Types.ObjectId, ref: "User" },
     answer1: { type: String, required: true },
     answer2: { type: String, required: true },
