@@ -6,6 +6,7 @@ const SurveySchema = new Schema(
     fullName: { type: String, required: true },
     comment: { type: String },
     phone: { type: String },
+    sex: { type: String },
     lat: { type: String },
     lng: { type: String },
     sex: { type: String, enum: ["Male", "Female"] },
