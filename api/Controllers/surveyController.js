@@ -31,6 +31,7 @@ module.exports = {
       let surveyData = req.body;
       surveyData.collectedBy = req.user._id;
 
+      console.log(req.body)
       const data = await Survey.create(surveyData);
 
       return res.status(200).json({
