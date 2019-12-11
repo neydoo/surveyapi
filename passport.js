@@ -8,25 +8,26 @@ const jwtSecret = process.env.jwtSecret || "secret";
 const User = require("./api/Models/User");
 
 const authenticate = async (email, password, done) => {
-  try{
-    let user = {} 
-    user = await User.findOne({ email }).select('+password')
-    
-      if (!user) {
-        return done(null, false, {
-          message: "Incorrect email."
-        });
-      } else if (!user.validPassword(password)) {
-        return done(null, false, {
-          message: "Incorrect password."
-        });
-      } 
-      user = await User.findOne({ email });
-      return done(null, user);
+  try {
+    let user = {};
+    user = await User.findOne({ $or: [{ email }, { username: email }] }).select(
+      "+password"
+    );
 
-    }catch(e ) {
-      console.error("error", e);
-    };
+    if (!user) {
+      return done(null, false, {
+        message: "Incorrect email/username."
+      });
+    } else if (!user.validPassword(password)) {
+      return done(null, false, {
+        message: "Incorrect password."
+      });
+    }
+    user = await User.findOne({ $or: [{ email }, { username: email }] });
+    return done(null, user);
+  } catch (e) {
+    console.error("error", e);
+  }
 };
 
 const localStrategy = new LocalStrategy(

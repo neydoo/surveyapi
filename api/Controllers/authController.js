@@ -13,9 +13,9 @@ const _ = require("lodash");
 module.exports = {
   async register(req, res) {
     try {
-      const { email, password } = req.body;
+      const { email, password, username, type } = req.body;
 
-      let userData = { email, password, firstName, lastName };
+      let userData = { email, password, username, type };
 
       if (_.isEmpty(email) || _.isEmpty(password)) {
         throw new Error("incomplete parameters");
@@ -36,7 +36,7 @@ module.exports = {
       const data = { user, token };
 
       return res.status(200).json({
-        message: "verification successful",
+        message: "user registered successfully",
         success: true,
         data
       });
@@ -158,6 +158,25 @@ module.exports = {
       return res
         .status(200)
         .json({ message: "Password reset successfully", success: true, user });
+    } catch (e) {
+      return res
+        .status(400)
+        .json({ message: "An error occured", e: e.toString() });
+    }
+  },
+
+  async edit(req, res) {
+    try {
+      const { id } = req.params;
+      const user = await User.findById(id);
+      if (!user) {
+        return res.status(400).json({ message: "Invalid User Id" });
+      }
+
+      await User.findByIdAndUpdate(id,req.body);
+      return res
+        .status(200)
+        .json({ message: "successfully updated user" });
     } catch (e) {
       return res
         .status(400)

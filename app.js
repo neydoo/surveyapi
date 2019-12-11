@@ -30,6 +30,10 @@ app.use(cookieParser());
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
 app.use("/auth", authRouter);
-app.use("/survey",passport.authenticate("jwt", { session: false }), surveyRouter);
+app.use(
+  "/survey",
+  passport.authenticate("jwt", { session: false }),
+  surveyRouter
+);
 
 module.exports = app;
