@@ -28,7 +28,11 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 app.use("/", indexRouter);
-app.use("/users", usersRouter);
+app.use(
+  "/users",
+  passport.authenticate("jwt", { session: false }),
+  usersRouter
+);
 app.use("/auth", authRouter);
 app.use(
   "/survey",

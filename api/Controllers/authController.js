@@ -13,11 +13,9 @@ const _ = require("lodash");
 module.exports = {
   async register(req, res) {
     try {
-      const { email, password, username, type } = req.body;
+      const { email, password, username } = req.body;
 
-      let userData = { email, password, username, type };
-
-      if (_.isEmpty(email) || _.isEmpty(password)) {
+      if (_.isEmpty(email) || _.isEmpty(password) || _.isEmpty(username)) {
         throw new Error("incomplete parameters");
       }
 
@@ -30,7 +28,9 @@ module.exports = {
       const user = await User.create(userData);
       const token = await JwtService.issueToken({
         id: user._id,
-        email: user.email
+        email: user.email,
+        username: user.username,
+        type: user.type
       });
 
       const data = { user, token };
@@ -57,7 +57,9 @@ module.exports = {
 
         const token = await JwtService.issueToken({
           id: user._id,
-          email: user.email
+          email: user.email,
+          username: user.username,
+          type: user.type
         });
 
         const payload = { user };
@@ -173,10 +175,8 @@ module.exports = {
         return res.status(400).json({ message: "Invalid User Id" });
       }
 
-      await User.findByIdAndUpdate(id,req.body);
-      return res
-        .status(200)
-        .json({ message: "successfully updated user" });
+      await User.findByIdAndUpdate(id, req.body);
+      return res.status(200).json({ message: "successfully updated user" });
     } catch (e) {
       return res
         .status(400)

@@ -23,7 +23,10 @@ const authenticate = async (email, password, done) => {
         message: "Incorrect password."
       });
     }
-    user = await User.findOne({ $or: [{ email }, { username: email }] });
+    user = await User.findOne({
+      $or: [{ email }, { username: email }],
+      isDeleted: false
+    });
     return done(null, user);
   } catch (e) {
     console.error("error", e);
