@@ -7,7 +7,7 @@ const user = require('../Controllers/userController')
 router.get('/', user.list);
 router.post('/new', user.addUser);
 router.post('/enable/:id', user.enableUser);
-router.post('/disable/:id', user.disbleUser);
+router.post('/disable/:id', user.disableUser);
 
 
 module.exports = router;
