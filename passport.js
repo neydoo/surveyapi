@@ -10,23 +10,30 @@ const User = require("./api/Models/User");
 const authenticate = async (email, password, done) => {
   try {
     let user = {};
-    user = await User.findOne({ $or: [{ email }, { username: email }] }).select(
-      "+password"
-    );
+    user = await User.findOne({
+      $or: [{ email }, { username: email }]
+    }).select("+password");
 
     if (!user) {
       return done(null, false, {
         message: "Incorrect email/username."
       });
-    } else if (!user.validPassword(password)) {
+    }
+    if (!user.validPassword(password)) {
       return done(null, false, {
         message: "Incorrect password."
       });
+    } else if (user.isDeleted === true) {
+      return done(null, false, {
+        message: "Account is deactivated"
+      });
     }
+
     user = await User.findOne({
       $or: [{ email }, { username: email }],
       isDeleted: false
     });
+
     return done(null, user);
   } catch (e) {
     console.error("error", e);
